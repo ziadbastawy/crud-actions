@@ -34,7 +34,11 @@
                 :rules="[(value) => !!value || 'Password is required.']"
               ></v-text-field>
             </v-col>
-            <v-btn @click="login"> Login </v-btn>
+            <v-col offset="5">
+              <v-btn color="primary" @click="login" :loading="loading">
+                Login
+              </v-btn>
+            </v-col>
           </v-row>
         </v-form>
       </v-card-text>
@@ -58,6 +62,7 @@ export default {
         },
       },
       valid: true,
+      loading: false,
     };
   },
   computed: {
@@ -71,7 +76,18 @@ export default {
   methods: {
     login() {
       if (this.$refs.form.validate()) {
-       
+        this.loading = true;
+        const payload = {
+          Email: this.user_email,
+          Password: this.user_password,
+        };
+        this.$axios.post("user/login", payload).then((res) => {
+          localStorage.setItem("token", res.data.token);
+          this.loading = false;
+          this.$router.push({
+            name: "country-list",
+          });
+        });
       }
     },
   },
@@ -81,5 +97,48 @@ export default {
 <style scoped>
 .login {
   height: 100vh;
+  background: rgb(2, 0, 36);
+  background: linear-gradient(
+    90deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(9, 9, 121, 1) 35%,
+    rgba(0, 212, 255, 1) 100%
+  );
+}
+.custom-loader {
+  animation: loader 1s infinite;
+  display: flex;
+}
+@-moz-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-o-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>
