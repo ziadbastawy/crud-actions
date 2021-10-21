@@ -3,6 +3,11 @@
     <v-app-bar color="primary" dark>
       <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
       <v-toolbar-title>Application</v-toolbar-title>
+      <v-spacer></v-spacer>
+
+      <v-btn icon color="white" @click.stop="logout">
+        <v-icon>mdi-logout</v-icon>
+      </v-btn>
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" app temporary>
@@ -35,5 +40,11 @@ export default {
     drawer: false,
     group: null,
   }),
+  methods: {
+    logout() {
+      this.$router.push({ name: "login" });
+      localStorage.removeItem("token");
+    },
+  },
 };
 </script>

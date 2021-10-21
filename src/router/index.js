@@ -17,12 +17,18 @@ const routes = [
       {
         path:'',
         name:'country-list',
-        component:country
+        component:country,
+        meta: {
+          requireAuth: true,
+        },
       },
       {
         path:'/city',
         name:'city-list',
-        component:city
+        component:city,
+        meta: {
+          requireAuth: true,
+        },
       }
     ]
   },
@@ -42,5 +48,16 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
 });
+
+router.beforeEach((to, from, next) => {
+  if(to.meta.requireAuth) {
+    if(localStorage.getItem('token')) next()
+    else next({name:'login'})
+  } else {
+    if(!localStorage.getItem('token')) next()
+    else next({name:'country-list'})
+
+  }
+})
 
 export default router;
