@@ -1,35 +1,36 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
+import country from "../views/country";
+import city from "../views/city.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
-    name: "home",
     component: Home,
     meta: {
       requireAuth: true,
     },
+    children:[
+      {
+        path:'',
+        name:'country-list',
+        component:country
+      },
+      {
+        path:'/city',
+        name:'city-list',
+        component:city
+      }
+    ]
   },
-  {
-    path: "/about",
-    name: "about",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
-    meta: {
-      requireAuth: true,
-    },
-  },
+
   {
     path: "/login",
     name: "login",
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/login.vue"),
+    component: () => import("../views/login.vue"),
     meta: {
       requireAuth: false,
     },
