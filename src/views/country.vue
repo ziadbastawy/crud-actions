@@ -108,52 +108,30 @@ export default {
   },
 
   created() {
-    this.$axios.get("country").then((res) => {
-      this.initialize(res);
-    });
+    this.getCountries();
   },
 
   methods: {
+    ////////////////////////////////
+    // Data Methods
+    ////////////////////////////////
+    getCountries() {
+      this.$axios.get("country").then((res) => {
+        this.initialize(res);
+      });
+    },
     initialize(data) {
       this.items = [...data.data];
     },
 
+    ////////////////////////////////
+    // Submission Methods
+    ////////////////////////////////
     editItem(item) {
       this.editedIndex = this.items.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
-
-    deleteItem(item) {
-      this.editedIndex = this.items.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialogDelete = true;
-    },
-
-    deleteItemConfirm() {
-      this.$axios.delete(`country/${this.editedItem.id}`).then(() => {
-        this.items.splice(this.editedIndex, 1);
-        this.closeDelete();
-      });
-    },
-
-    close() {
-      this.dialog = false;
-      this.$nextTick(() => {
-        this.$refs.form.reset();
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
-    },
-
-    closeDelete() {
-      this.dialogDelete = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
-    },
-
     save() {
       if (this.$refs.form.validate()) {
         if (this.editedIndex > -1) {
@@ -173,6 +151,40 @@ export default {
       this.$axios.put("country", this.editedItem).then((res) => {
         Object.assign(this.items[this.editedIndex], res.data);
         this.close();
+      });
+    },
+
+    ////////////////////////////////
+    // Delete Methods
+    ////////////////////////////////
+    deleteItem(item) {
+      this.editedIndex = this.items.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialogDelete = true;
+    },
+    deleteItemConfirm() {
+      this.$axios.delete(`country/${this.editedItem.id}`).then(() => {
+        this.items.splice(this.editedIndex, 1);
+        this.closeDelete();
+      });
+    },
+
+    ////////////////////////////////
+    // Reset Methods
+    ////////////////////////////////
+    close() {
+      this.dialog = false;
+      this.$nextTick(() => {
+        this.$refs.form.reset();
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
+    },
+    closeDelete() {
+      this.dialogDelete = false;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
       });
     },
   },
